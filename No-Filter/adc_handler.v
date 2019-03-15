@@ -2,19 +2,19 @@
 // Writen by James Dalton 7/6/18
 
 `define SYS_CLK_RATE	100_000_000 // Hz
-`define ADC_SAMP_RATE	62_500		// Hz
+`define ADC_SAMP_RATE	62_500	    // Hz
 
 module adc_handler # (
     parameter V_REF = 2.0
     )(
-	input 	d_clk	    ,     // Clock source is generated from an external module
-	input 	d_out	    ,
-	output reg	not_cs	,
+	input 	d_clk,     // Clock source is generated from an external module
+	input 	d_out,
+	output reg not_cs,
 	output reg [11:0] adc_data_latched//,
 	//output reg  data_valid   // Pulse tells top module that current data string is valid
 	);
 	
-	reg [11:0] adc_data; 	// 12-bit data coming from ADC	
+	reg [11:0] adc_data; // 12-bit data coming from ADC	
 	reg [7:0]  clk_num;	
 	
 	// Initially set the chip to be inactive
@@ -39,10 +39,11 @@ module adc_handler # (
 			'd14: adc_data[1] <= d_out;
 			'd15: adc_data[0] <= d_out;
 			'd16: not_cs <= 1'b1;
-			default: begin clk_num  <= 1'b0;
-					 adc_data_latched <= adc_data;
-					 not_cs   <= 1'b1;
-					 end
+			default: begin 
+				clk_num <= 1'b0;
+				adc_data_latched <= adc_data;
+				not_cs <= 1'b1;
+				end
 		endcase
 		clk_num = clk_num + 1'b1;
 	end
